@@ -1,26 +1,40 @@
 import React from 'react';
-import logo from './logo.svg';
 import './App.css';
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+	return (
+		<div className='App'>
+			<header className='App-header'>
+				<p>Exchage rate: $1 = £1</p>
+
+				<div className='itemWrapper'>
+					<select>
+						<option>GBP</option>
+						<option>EUR</option>
+						<option>USD</option>
+					</select>
+
+					<div>
+						<input type='number' step='0.1' placeholder='0.00' />
+					</div>
+				</div>
+
+				<div className='itemWrapper'>
+					<select>
+						<option>GBP</option>
+						<option>EUR</option>
+						<option>USD</option>
+					</select>
+
+					<div>
+						<span>0.00</span>
+					</div>
+				</div>
+
+				<button>Exchange</button>
+			</header>
+		</div>
+	);
 }
 
 export default App;
