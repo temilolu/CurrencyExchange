@@ -1,0 +1,15 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<CurrentRate /> spec Should matches snapshot 1`] = `
+<DocumentFragment>
+  <div
+    class="my-3"
+  >
+    <p
+      class="font-weight-bold fsizes"
+    >
+       USD =  
+    </p>
+  </div>
+</DocumentFragment>
+`;

@@ -1,0 +1,9 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<CurrencyPicker /> spec Should matches snapshot 1`] = `
+<DocumentFragment>
+  <select
+    class="custom-select custom-select-sm mb-3"
+  />
+</DocumentFragment>
+`;

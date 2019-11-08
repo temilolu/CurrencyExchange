@@ -1,40 +1,141 @@
-import React from 'react';
+import React, { Component } from 'react';
 import './App.css';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import CurrencyPicker from './components/CurrencyPicker';
+import CurrencyExchange from './components/CurrencyExchange';
+import CurrentRate from './components/CurrentRate';
 
-function App() {
-	return (
-		<div className='App'>
-			<header className='App-header'>
-				<p>Exchage rate: $1 = £1</p>
+export default class App extends Component {
+	intervalID;
 
-				<div className='itemWrapper'>
-					<select>
-						<option>GBP</option>
-						<option>EUR</option>
-						<option>USD</option>
-					</select>
+	constructor(props) {
+		super(props);
+		this.state = {
+			result: '',
+			fromCurrency: 'GBP',
+			toCurrency: 'EUR',
+			amount: '0',
+			currencies: ['USD', 'EUR', 'GBP']
+		};
+	}
 
-					<div>
-						<input type='number' step='0.1' placeholder='0.00' />
+	componentDidMount() {
+		this.calculate();
+	}
+
+	componentWillUnmount() {
+		clearTimeout(this.intervalID);
+	}
+
+	calculate = () => {
+		const amount = this.state.amount;
+		if (amount === isNaN) {
+			return;
+		} else {
+			fetch(
+				`https://api.exchangeratesapi.io/latest?base=${this.state.fromCurrency}`
+			)
+				.then((res) => res.json())
+				.then((data) => {
+					const result = (data.rates[this.state.toCurrency] * amount).toFixed(
+						2
+					);
+					this.setState({
+						result
+					});
+
+					// call calculate() again in 10 seconds
+					this.intervalID = setTimeout(this.calculate.bind(this), 10000);
+				});
+		}
+	};
+
+	handleSelect = (e) => {
+		this.setState(
+			{
+				[e.target.name]: e.target.value,
+				result: null
+			},
+			this.calculate
+		);
+	};
+
+	handleInput = (e) => {
+		this.setState(
+			{
+				amount: e.target.value,
+				result: null
+			},
+			this.calculate
+		);
+	};
+
+	render() {
+		const { currencies, fromCurrency, amount, toCurrency, result } = this.state;
+		const currencyMap = currencies.map((currency) => (
+			<option key={currency} value={currency}>
+				{currency}
+			</option>
+		));
+
+		return (
+			<React.Fragment>
+				<div className='App'>
+					<div className='App-header'>
+						<CurrentRate
+							from={fromCurrency}
+							to={toCurrency}
+							amount={amount}
+							result={result}
+						/>
+						<div className='itemWrapper'>
+							<div className='col-xs-6 col-sm-3'>
+								<CurrencyPicker
+									currencyValue={fromCurrency}
+									selectCurrency={this.handleSelect}
+									currenyOptions={currencyMap}
+									name='fromCurrency'
+								/>
+							</div>
+
+							<div className='col-xs-12 col-sm-12'>
+								<div className='form-group'>
+									<span className='font-weight-bold fsizes'>Amount</span>
+									<CurrencyExchange
+										base={amount}
+										handleInput={this.handleInput}
+										convertTo={fromCurrency}
+										disable={false}
+									/>
+								</div>
+							</div>
+						</div>
+
+						<div className='itemWrapper'>
+							<div className='col-xs-6 col-sm-3'>
+								<CurrencyPicker
+									currencyValue={toCurrency}
+									selectCurrency={this.handleSelect}
+									currenyOptions={currencyMap}
+									name='toCurrency'
+								/>
+							</div>
+
+							<div className='col-xs-12 col-sm-12'>
+								<div className='form-group'>
+									<span className='font-weight-bold fsizes'>Converted to</span>
+									<CurrencyExchange
+										base={amount === '' ? '0' : result === null ? '0' : result}
+										convertTo={toCurrency}
+										disable={false}
+										handleInput={this.handleInput}
+									/>
+								</div>
+							</div>
+						</div>
 					</div>
 				</div>
-
-				<div className='itemWrapper'>
-					<select>
-						<option>GBP</option>
-						<option>EUR</option>
-						<option>USD</option>
-					</select>
-
-					<div>
-						<span>0.00</span>
-					</div>
-				</div>
-
-				<button>Exchange</button>
-			</header>
-		</div>
-	);
+			</React.Fragment>
+		);
+	}
 }
-
-export default App;
