@@ -15,7 +15,8 @@ export default class App extends Component {
 			fromCurrency: 'GBP',
 			toCurrency: 'EUR',
 			amount: '0',
-			currencies: ['USD', 'EUR', 'GBP']
+			currencies: ['USD', 'EUR', 'GBP'],
+			exchange: ''
 		};
 	}
 
@@ -40,13 +41,16 @@ export default class App extends Component {
 					const result = (data.rates[this.state.toCurrency] * amount).toFixed(
 						2
 					);
+					const exchange = data.rates;
 					this.setState({
-						result
+						result,
+						exchange
 					});
 
 					// call calculate() again in 10 seconds
 					this.intervalID = setTimeout(this.calculate.bind(this), 10000);
-				});
+				})
+				.catch((err) => console.log(err));
 		}
 	};
 
@@ -71,7 +75,14 @@ export default class App extends Component {
 	};
 
 	render() {
-		const { currencies, fromCurrency, amount, toCurrency, result } = this.state;
+		const {
+			currencies,
+			fromCurrency,
+			amount,
+			toCurrency,
+			result,
+			exchange
+		} = this.state;
 		const currencyMap = currencies.map((currency) => (
 			<option key={currency} value={currency}>
 				{currency}
@@ -85,8 +96,8 @@ export default class App extends Component {
 						<CurrentRate
 							from={fromCurrency}
 							to={toCurrency}
-							amount={amount}
-							result={result}
+							amount='1'
+							rate={exchange}
 						/>
 						<div className='itemWrapper'>
 							<div className='col-xs-6 col-sm-3'>
@@ -133,6 +144,10 @@ export default class App extends Component {
 								</div>
 							</div>
 						</div>
+
+						<span className='font-weight-light fsizes my-3'>
+							Data provided by: Exchangeratesapi.io
+						</span>
 					</div>
 				</div>
 			</React.Fragment>
