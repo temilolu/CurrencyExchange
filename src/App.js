@@ -74,6 +74,8 @@ export default class App extends Component {
 		);
 	};
 
+	handleClick = (e) => {};
+
 	render() {
 		const {
 			currencies,
@@ -138,7 +140,7 @@ export default class App extends Component {
 									<CurrencyExchange
 										base={amount === '' ? '0' : result === null ? '0' : result}
 										convertTo={toCurrency}
-										disable={false}
+										disable={true}
 										handleInput={this.handleInput}
 									/>
 								</div>
